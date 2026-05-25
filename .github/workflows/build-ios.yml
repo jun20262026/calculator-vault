@@ -27,22 +27,30 @@ jobs:
       - name: Add iOS platform
         run: npx cap add ios
 
-      - name: Copy web assets to iOS
-        run: npx cap copy ios
-
-      - name: Verify Xcode scheme
+      - name: Install CocoaPods dependencies
         run: |
           cd ios/App
-          xcodebuild -project App.xcodeproj -list
+          if [ -f Podfile ]; then
+            pod install --repo-update
+          fi
+
+      - name: Copy web assets to iOS
+        run: npx cap copy ios
 
       - name: Build IPA (No Code Sign)
         run: |
           cd ios/App
+          # Use workspace if CocoaPods generated one, otherwise use project
+          if [ -f App.xcworkspace ]; then
+            PROJECT_ARG="-workspace App.xcworkspace"
+          else
+            PROJECT_ARG="-project App.xcodeproj"
+          fi
           xcodebuild \
-            -project App.xcodeproj \
+            $PROJECT_ARG \
             -scheme App \
+            -sdk iphoneos \
             -configuration Release \
-            -destination 'generic/platform=iOS' \
             -archivePath $PWD/build/App.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
