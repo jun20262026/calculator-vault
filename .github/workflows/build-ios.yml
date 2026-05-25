@@ -30,18 +30,25 @@ jobs:
       - name: Copy web assets to iOS
         run: npx cap copy ios
 
+      - name: Verify Xcode scheme
+        run: |
+          cd ios/App
+          xcodebuild -project App.xcodeproj -list
+
       - name: Build IPA (No Code Sign)
         run: |
           cd ios/App
           xcodebuild \
             -project App.xcodeproj \
             -scheme App \
-            -sdk iphoneos \
             -configuration Release \
+            -destination 'generic/platform=iOS' \
             -archivePath $PWD/build/App.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
             clean archive
 
           # Package IPA
