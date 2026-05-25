@@ -30,16 +30,16 @@ jobs:
       - name: Copy web assets to iOS
         run: npx cap copy ios
 
-      - name: Resolve Swift Package Manager dependencies
+      - name: Install CocoaPods dependencies
         run: |
           cd ios/App
-          xcodebuild -project App.xcodeproj -scheme App -resolvePackageDependencies
+          pod install --repo-update
 
       - name: Build IPA (No Code Sign)
         run: |
           cd ios/App
           xcodebuild \
-            -project App.xcodeproj \
+            -workspace App.xcworkspace \
             -scheme App \
             -sdk iphoneos \
             -configuration Release \
