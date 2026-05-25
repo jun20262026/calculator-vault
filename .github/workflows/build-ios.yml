@@ -27,15 +27,15 @@ jobs:
       - name: Add iOS platform
         run: npx cap add ios
 
+      - name: Copy web assets to iOS
+        run: npx cap copy ios
+
       - name: Install CocoaPods dependencies
         run: |
           cd ios/App
           if [ -f Podfile ]; then
             pod install --repo-update
           fi
-
-      - name: Copy web assets to iOS
-        run: npx cap copy ios
 
       - name: Build IPA (No Code Sign)
         run: |
