@@ -29,4 +29,10 @@ fs.copyFileSync(path.join(__dirname, 'index.html'), path.join(distDir, 'index.ht
 // 复制 src 目录
 copyDir(srcDir, path.join(distDir, 'src'));
 
+// 复制图标和启动图（如果存在）
+const iconsDir = path.join(__dirname, 'icons');
+const splashDir = path.join(__dirname, 'splash');
+if (fs.existsSync(iconsDir)) copyDir(iconsDir, path.join(distDir, 'icons'));
+if (fs.existsSync(splashDir)) copyDir(splashDir, path.join(distDir, 'splash'));
+
 console.log('✅ Build complete! Files copied to dist/');

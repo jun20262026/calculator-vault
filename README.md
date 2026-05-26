@@ -1,4 +1,4 @@
-# 房贷计算器 - 伪装隐私保险箱
+# 房贷计算器 - 伪装隐私保险箱 v3
 
 一个外观为正常房贷计算器的 iOS App，通过特定手势进入隐私保险箱系统。
 
@@ -11,14 +11,37 @@
 
 ### 隐私系统（连续按 C 键 5 次进入）
 - 📷 **加密相册**：存储私密照片/视频
+  - 相册分类管理（可自定义分类）
+  - 缩略图生成，节省内存
+  - 批量选择、导出、删除、移动分类
+  - 图片预览（支持左右滑动切换）
 - 📄 **加密文件**：存储私密文件
 - 📝 **加密笔记**：加密文字记录
 - 🌐 **隐私浏览器**：无痕浏览网页
+- 🗑️ **回收站**：误删恢复、彻底删除
 
-### 紧急退出
-- 摇一摇手机自动隐藏
-- 按电源键/锁屏自动隐藏
-- ⚡ 闪电按钮一键退出
+### 安全功能
+- **假密码模式**：设置假密码，输入后进入"伪装保险箱"（显示无害内容）
+- **紧急退出**：摇一摇手机自动隐藏（阈值已优化）
+- **锁屏自动隐藏**：按电源键/锁屏自动退出保险箱
+- ⚡ **闪电按钮一键退出**
+
+## v3 更新日志
+
+### BUG 修复
+- ✅ 修复 CSS 类名拼写错误 `password-bts` → `password-btns`
+- ✅ 修复 C 键触发逻辑（第 5 次不再执行清空动作）
+- ✅ 修复房贷计算器输入校验（防止 NaN 错误）
+- ✅ 密码输入框使用数字键盘（`inputmode="numeric"`）
+
+### 新增功能
+- ✅ **假密码模式**：首次设置时可配置假密码
+- ✅ **相册分类**：支持自定义分类，批量移动
+- ✅ **缩略图生成**：拍照/导入时自动生成 300px 缩略图
+- ✅ **批量操作**：批量选择、导出、删除、移动
+- ✅ **回收站**：照片/文件/笔记删除后进入回收站，支持恢复
+- ✅ **图片预览增强**：支持左右切换上一张/下一张
+- ✅ **iOS 图标和启动图**：自动生成计算器风格图标
 
 ## GitHub Actions 自动打包步骤
 
@@ -27,7 +50,7 @@
 # 初始化 Git 仓库（如果还没有）
 git init
 git add .
-git commit -m "Initial commit"
+git commit -m "v3 update"
 
 # 在 GitHub 创建新仓库后推送
 git remote add origin https://github.com/你的用户名/calculator-vault.git
@@ -53,11 +76,31 @@ git push -u origin main
 3. 使用个人证书签名
 4. 安装到手机
 
+### 故障排除
+
+#### 错误：`cd ios: No such file or directory`
+**原因**：`npx cap add ios` 执行失败，iOS 目录未生成。
+**解决**：
+- 确保 `package.json` 中包含 `@capacitor/ios` 依赖
+- 运行 `npm install` 后再试
+- 使用备用工作流 **Build iOS IPA (Alternative)**
+
+#### 错误：`Node.js (v18.20.8) is outdated`
+**原因**：GitHub Actions 的 macOS 镜像默认 Node 版本过低。
+**解决**：工作流已配置 `node-version: '20.19.4'`，如仍失败请尝试 **Build iOS IPA (Alternative)** 工作流（使用 Node 22）。
+
+#### 错误：`Cannot determine the project's Expo SDK version`
+**原因**：GitHub Actions 环境错误地识别为 Expo 项目。
+**解决**：
+- 确保项目中没有 `expo` 相关依赖
+- 使用 `npm ci` 而不是 `npm install` 安装依赖
+- 清理 GitHub Actions 缓存后重试
+
 ## 使用说明
 
 1. 打开 App，显示房贷计算器界面
 2. **快速连续按 C 键 5 次**
-3. 首次使用设置 4-6 位密码
+3. 首次使用设置 4-6 位密码（可选设置假密码）
 4. 进入隐私保险箱，使用各功能
 5. 按 ⚡ 按钮或摇一摇快速退出
 
@@ -75,3 +118,11 @@ node build.js
 npx cap add ios
 npx cap open ios    # 用 Xcode 打开
 ```
+
+## 图标生成
+
+```bash
+python generate-icons.py
+```
+
+自动生成 iOS 所需的各种尺寸图标和启动图。
